@@ -12,6 +12,7 @@ export const useInstrumentStore = defineStore('instrument', () => {
     const pneumoInstrument = ref([])
     const dieselInstrument = ref([])
     const loading = ref(true)
+    const instrumentId = ref(null)
 
     // Actions
     async function getInstrumentAll() {
@@ -36,9 +37,26 @@ export const useInstrumentStore = defineStore('instrument', () => {
 
         loading.value = false
     }
+    async function getInstrumentId(id) {
+        instrumentId.value = id
+    }
+    async function enterToBasket(instrument) {
+        let arrayForBasket = ref([]);
+        if (JSON.parse(localStorage.getItem("basket_array")).length === 0) {
+            localStorage.setItem("basket_array", JSON.stringify(arrayForBasket.value))
+        }
+        arrayForBasket.value = JSON.parse(localStorage.getItem("basket_array"))
+        arrayForBasket.value.push(instrument)
+        localStorage.setItem("basket_array", JSON.stringify(arrayForBasket.value));
+    }
 
     // Getters
     // const doubleCount = computed(() => {})
 
-    return {instrumentAll, cordlessInstrument, gasolineInstrument, networkInstrument, pneumoInstrument, dieselInstrument, loading, getInstrumentAll}
+    return {instrumentAll, instrumentId,
+        cordlessInstrument, gasolineInstrument,
+        networkInstrument, pneumoInstrument,
+        dieselInstrument, loading,
+        getInstrumentAll, getInstrumentId,
+        enterToBasket}
 })

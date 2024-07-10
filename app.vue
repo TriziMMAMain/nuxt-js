@@ -15,6 +15,9 @@ getInstrumentAll()
       console.log(e);
     })
 
+//
+
+
 const navigationDrawer = ref(false)
 const trueOrFalseNavigationDrawer = ref(true)
 const navigationDrawerClick = () => {
@@ -27,27 +30,29 @@ const clickToFilter = () => {
   trueOrFalseNavigationDrawer.value = false
 }
 
-//
-
-
 </script>
 
 <template>
   <v-app full-height>
     <v-app-bar elevation="0">
-      <Menu></Menu>
+      <div class="wrap-menu">
+        <nuxt-link exact-active-class="active" to="/">Главная</nuxt-link>
+        <nuxt-link active-class="active" to="/basket/">Корзина</nuxt-link>
+
+        <div class="actions-block">
+          <v-btn
+              class="v-btn-navigation-drawer"
+              prepend-icon="fa-solid fa-bars"
+              @click="navigationDrawerClick()">
+            Каталог инструмента
+          </v-btn>
+        </div>
+
+
+      </div>
     </v-app-bar>
 
     <v-main>
-      <div class="actions-block">
-        <v-btn
-            class="v-btn-navigation-drawer"
-            prepend-icon="fa-solid fa-bars"
-            @click="navigationDrawerClick()">
-          Каталог инструмента
-        </v-btn>
-      </div>
-
       <v-navigation-drawer
           width="500"
           v-model="navigationDrawer"
@@ -72,7 +77,6 @@ const clickToFilter = () => {
         </div>
 
       </v-navigation-drawer>
-
       <NuxtLayout name="loading" v-if="loading"></NuxtLayout>
       <NuxtLayout name="default" v-else></NuxtLayout>
     </v-main>
@@ -92,6 +96,18 @@ const clickToFilter = () => {
   background-color: rgba(198, 196, 196, 0.84);
 }
 
+
+.wrap-menu {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.active {
+  color: red;
+}
+
 .actions-block {
   width: 1600px;
   display: flex;
@@ -101,5 +117,6 @@ const clickToFilter = () => {
 
 .v-btn-navigation-drawer {
   width: 350px !important;
+
 }
 </style>

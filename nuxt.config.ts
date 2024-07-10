@@ -15,6 +15,8 @@ export default defineNuxtConfig({
         '@pinia/nuxt',
         'nuxt-lodash',
         'vue3-carousel-nuxt',
+        '@vesp/nuxt-fontawesome',
+
         //...
     ],
     pinia: {
@@ -35,5 +37,11 @@ export default defineNuxtConfig({
     },
     carousel: {
         prefix: 'MyPrefix'
+    },
+    fontawesome: {
+        icons: {
+            solid: ['dollar-sign', 'cog', 'circle', 'check', 'calendar', 'house', 'award', 'cart-shopping', 'x'],
+            regular: ['user']
+        }
     }
 })

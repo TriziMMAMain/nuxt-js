@@ -2,11 +2,14 @@
 import {useInstrumentStore} from '@/stores/store.js'
 import {storeToRefs} from 'pinia'
 import {computed, ref} from "vue";
+import BasketDynamic from '@/components/BasketDynamic.vue'
 
 const router = useRouter()
 
 const store = useInstrumentStore()
-const {cordlessInstrument} = storeToRefs(store)
+const {getInstrumentId} = store
+const { cordlessInstrument} = storeToRefs(store)
+
 
 const instrument = ref(cordlessInstrument)
 console.log(instrument.value);
@@ -24,18 +27,38 @@ function showMore() {
 // To ID
 const hrefToId = async (id) => {
   await router.push({name: 'cordless-instrument-id-id', params: {id: id}})
-  console.log(id);
 }
 // To Basket
-const hrefToBasket = (id) => {
-  console.log(id)
+const basketDynamicId = ref(false)
+const hrefToBasket = async (id) => {
+  await getInstrumentId(id)
+      .then(() => {
+        console.log('Fetch ID')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  basketDynamicId.value = true
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth' // Плавно прокручиваем
+  });
 }
+const instrumentIdToBasket = ref(0)
+
+const logId = (close) => {
+  basketDynamicId.value = close
+};
+
 
 //
 
 </script>
 
 <template>
+  <div class="basket-dynamic" v-if="basketDynamicId">
+    <BasketDynamic @closeComponentSent="logId"></BasketDynamic>
+  </div>
   <div class="wrap-block">
     <div class="filter-block">
       <v-progress-linear color="primary" model-value="100" :height="1"></v-progress-linear>
@@ -56,14 +79,14 @@ const hrefToBasket = (id) => {
             <!--          <h1 class="subtitle"></h1>-->
             <div class="description">
               <p class="description-li" v-for="info in item.featureTopTitle">{{ info.featureTopTitleInfoTitle }} <span
-                  class="descripiton-li-span">{{
-                  info.featureTopTitleInfoText
-                }}</span></p>
+                  class="descripiton-li-span">
+                {{ info.featureTopTitleInfoText }}</span></p>
             </div>
           </div>
           <div class="price-block">
             <h1 class="title-price">{{ item.price }} р.</h1>
-            <v-btn class="basket-btn" elevation="0" @click="hrefToBasket(item.id)">В корзину</v-btn>
+            <v-btn class="basket-btn" elevation="0" @click="hrefToBasket(item.id)">
+              <font-awesome class="v-btn-price-icon" :icon="['fas', 'cart-shopping']"/>В корзину</v-btn>
             <p class="text-availability">В наличии > {{ item.availability }}</p>
           </div>
         </div>
@@ -105,6 +128,19 @@ const hrefToBasket = (id) => {
     margin: 100px auto;
     display: flex;
     justify-content: space-between;
+  }
+
+  // Basket Dynamic
+
+  .basket-dynamic {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    overflow-y: hidden;
+    z-index: 1006;
+    backdrop-filter: blur(5px);
+    background-color: rgba(83, 83, 83, 0.87);
   }
 
   // Filter
@@ -218,6 +254,10 @@ const hrefToBasket = (id) => {
     background-color: #FFFFFF;
     border: 1px solid $primary;
     transition: all 0.3s ease-in-out;
+  }
+
+  .v-btn-price-icon {
+    margin-right: 10px;
   }
 
   .text-availability {
